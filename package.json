@@ -1,0 +1,25 @@
+{
+  "name": "luiizfellipee.github.io",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Portfólio profissional de Luiz Felipe Piumbini",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "node --test \"tests/**/*.test.js\"",
+    "check": "node scripts/check-dist.js",
+    "check:links": "node scripts/check-dist.js --external"
+  },
+  "dependencies": {
+    "@fontsource-variable/ibm-plex-sans": "^5.3.0",
+    "@fontsource/ibm-plex-mono": "^5.3.0"
+  },
+  "devDependencies": {
+    "vite": "^8.3.0"
+  },
+  "engines": {
+    "node": ">=20.19"
+  }
+}
