@@ -37,15 +37,15 @@ export const projects = [
     kind: 'Projeto pessoal',
     language: 'Python',
     summary:
-      'Monitora diariamente as vagas públicas da Autoglass Tech, filtra as da área de Dados e avisa no Telegram quando algo muda.',
+      'Monitora vagas públicas de Dados nas APIs da Remotive e RemoteOK, com suporte opcional a páginas de carreira na Gupy, e avisa no Discord quando algo muda.',
     features: [
-      'Coleta da página pública de carreiras, com suporte opcional à API da Gupy.',
-      'Filtro com normalização de acentos que ignora termos genéricos como "dados" e "data".',
-      'Comparação com o snapshot anterior (vagas novas, alteradas e não encontradas) e histórico em JSONL.',
+      'Coleta via APIs da Remotive e RemoteOK, com suporte opcional a páginas de carreira na Gupy.',
+      'Filtro por cargos de Dados (Analista, Cientista, Engenheiro de Dados, BI, Machine Learning, MLOps, ETL, Analytics, Governança e Arquitetura de Dados).',
+      'Comparação com o snapshot anterior (vagas novas, alteradas e não encontradas) e histórico em JSON.',
       'Em caso de falha na coleta, o snapshot anterior é preservado para evitar falsos alertas.',
-      'Execução diária no GitHub Actions com secrets e testes automatizados com pytest.',
+      'Execução semanal no GitHub Actions (segundas-feiras) com secrets e testes automatizados com pytest.',
     ],
-    tech: ['Python', 'requests', 'pytest', 'GitHub Actions', 'Telegram Bot API'],
+    tech: ['Python', 'requests', 'pytest', 'GitHub Actions', 'Discord Webhook'],
   },
   {
     id: 'acidentes_bh',
