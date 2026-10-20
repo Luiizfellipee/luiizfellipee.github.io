@@ -1,8 +1,8 @@
 # Portfólio · Luiz Felipe
 
-Portfólio profissional de **Luiz Felipe Piumbini**, Analista de QA II com foco em Data Quality, automação de testes e IA aplicada.
+Portfólio profissional de **Luiz Felipe Piumbini**, Analista de QA II com foco em Data Quality, automação de testes e IA aplicada, em direção à área de Dados.
 
-**Site:** https://luiizfellipee.github.io/
+**Site:** <https://luiizfellipee.github.io/>
 
 ## Objetivo
 
@@ -13,15 +13,18 @@ Fontes do conteúdo:
 - **LinkedIn** (PDF exportado do perfil): experiência, formação, certificações e resumo.
 - **GitHub** ([@Luiizfellipee](https://github.com/Luiizfellipee)): projetos, analisados a partir do código e da documentação de cada repositório.
 
+Visual: identidade monocromática com vidro (glass), baseada no design de referência feito no Claude Design. Detalhes em [docs/IMPLEMENTACAO_REDESIGN.md](docs/IMPLEMENTACAO_REDESIGN.md).
+
 ## Stack
 
 | Camada | Escolha |
 | --- | --- |
-| Build | [Vite](https://vite.dev/) (única dependência de desenvolvimento) |
+| Build | [Vite](https://vite.dev/) |
 | Markup | HTML semântico **pré-renderizado no build** a partir de módulos JS |
-| Estilo | CSS puro com design tokens (custom properties) |
-| Comportamento | JavaScript vanilla (~2 kB gzip) |
-| Fontes | IBM Plex Sans e Plex Mono, servidas pelo próprio site (subset latin) |
+| Estilo | CSS puro com design tokens (`src/styles/tokens.css`) |
+| Comportamento | JavaScript vanilla (~3,7 kB gzip), sem biblioteca de animação |
+| Fontes | Geist e Geist Mono (OFL), servidas pelo próprio site (subset latin) |
+| Testes | `node:test` (conteúdo, HTML, design system) e E2E com `playwright-core` no Chrome instalado |
 | Deploy | GitHub Actions → GitHub Pages |
 
 ## Estrutura
@@ -36,17 +39,20 @@ Fontes do conteúdo:
 │   ├── render/
 │   │   ├── index.js           # monta a página, metadados e JSON-LD
 │   │   ├── html.js            # template tag com escape automático
-│   │   ├── icons.js           # ícones SVG inline
-│   │   └── sections/          # uma função por seção
-│   ├── scripts/               # navegação, aparecimento progressivo, GitHub API, copiar e-mail
-│   ├── styles/                # tokens, base, layout e seções
+│   │   └── sections/          # uma função por seção (hero, sobre, experiência, skills, projetos…)
+│   ├── scripts/               # interações: dock, reveal, cursor/tilt/magnetismo, acordeão, abas, jornada…
+│   ├── styles/                # tokens, base, layout (componentes) e seções
 │   └── main.js                # entrada do cliente
-├── tests/content.test.js      # integridade do conteúdo e do HTML gerado
+├── tests/
+│   ├── content.test.js        # integridade do conteúdo, HTML gerado e design system
+│   └── e2e/site.e2e.js        # navegador real: mouse, teclado, toque, movimento reduzido, sem JS
 ├── scripts/check-dist.js      # valida assets, âncoras, metadados e links do build
+├── docs/                      # auditoria, implementação e validação do redesign
 └── .github/workflows/deploy.yml
 ```
 
 Para **atualizar o conteúdo**, edite só os arquivos em `src/content/`. O HTML é regenerado automaticamente.
+Para **ajustar cores**, edite apenas `src/styles/tokens.css` (os testes recusam hex fora dele e cores saturadas).
 
 ## Como executar
 
@@ -60,16 +66,20 @@ npm run dev        # http://localhost:5173 (recarrega ao editar conteúdo)
 ## Build e verificação
 
 ```bash
-npm test               # testes de conteúdo e HTML (node:test)
+npm test               # testes de conteúdo, HTML e design system (node:test)
 npm run build          # gera dist/
 npm run check          # valida assets, âncoras e metadados do build
 npm run check:links    # idem + testa links externos (requer rede)
-npm run preview        # serve dist/ localmente
+npm run test:e2e       # build + testes no navegador (requer Chrome ou Edge instalado)
+npm run preview        # serve dist/ em http://localhost:4173
 ```
+
+`npm run test:e2e` usa o Chrome instalado (canal `chrome`, com fallback para `msedge`). Para outro executável:
+`CHROME_PATH=/caminho/do/chrome npm run test:e2e`. As capturas de tela ficam em `test-results/` (ignorada pelo Git).
 
 ## Publicação
 
-O deploy é automático a cada push na branch `main`, pelo workflow `.github/workflows/deploy.yml`, que executa testes, build e verificação e publica `dist/`.
+O deploy é automático a cada push na branch `main`, pelo workflow `.github/workflows/deploy.yml`, que executa `npm ci`, testes, build e verificação e publica `dist/`.
 
 ### Configuração do GitHub Pages (uma única vez)
 
@@ -77,14 +87,13 @@ O deploy é automático a cada push na branch `main`, pelo workflow `.github/wor
 2. Em **Build and deployment → Source**, selecione **GitHub Actions**.
 3. Faça push na `main` (ou rode o workflow manualmente em **Actions → Deploy GitHub Pages → Run workflow**).
 
-Como este é um site de usuário (`<usuario>.github.io`), ele é servido na raiz do domínio e o `base` do Vite é `/`.
+Como este é um site de usuário (`<usuario>.github.io`), ele é servido na raiz do domínio e o `base` do Vite é `/`. A página é única, com navegação por âncoras, então não há rotas que precisem de fallback 404.
 
 ## Decisões técnicas
 
-- **Sem framework no runtime.** É uma página única e estática. React ou outro framework adicionaria peso sem benefício. O conteúdo é separado em módulos e convertido em HTML no build, o que dá boa organização para quem mantém e HTML completo para buscadores e redes sociais.
-- **Conteúdo como dados.** Textos ficam em `src/content/`, separados da apresentação, e cada competência registra onde foi aplicada ou comprovada.
-- **Progressive enhancement.** O site funciona sem JavaScript. O JS só adiciona menu mobile, destaque de seção, animações de entrada e dados ao vivo do GitHub.
-- **GitHub API sem token.** A seção GitHub chama a API pública apenas quando está prestes a aparecer, guarda o resultado em `sessionStorage` e mantém o conteúdo estático se a chamada falhar. Nenhum token ou secret vai para o frontend.
-- **Acessibilidade.** HTML semântico, um único `h1`, skip link, `aria-expanded` e tecla Esc no menu, foco visível, contraste AA e `prefers-reduced-motion` respeitado.
+- **Sem framework no runtime.** Página única e estática; as interações (tilt, luz, magnetismo, acordeão, abas, trilha no scroll) cabem em CSS, `IntersectionObserver` e `requestAnimationFrame`. React adicionaria peso sem benefício.
+- **Um único listener de ponteiro** alimenta luz, tilt, magnetismo, anel e parallax; o laço de animação só roda enquanto há movimento. Animações contínuas (faixa, pipeline) param fora da tela.
+- **Progressive enhancement.** Sem JavaScript todo o conteúdo fica visível; o JS só recolhe painéis e adiciona efeitos.
+- **Acessibilidade.** HTML semântico, um único `h1`, skip link, `aria-expanded`/`aria-controls` no acordeão, abas WAI-ARIA com setas, foco visível, contraste AA verificado em teste, `prefers-reduced-motion` e `prefers-reduced-transparency`, fallback sólido sem `backdrop-filter`, cursor nativo preservado.
 - **SEO.** Title e description reais, canonical, Open Graph com imagem 1200×630, JSON-LD (`ProfilePage` e `Person`), `robots.txt` e `sitemap.xml`.
-- **Performance.** Cerca de 10 kB de HTML, 5 kB de CSS e 2 kB de JS (gzip), fontes locais com `font-display: swap` e nenhuma requisição de terceiros no carregamento inicial.
+- **Performance.** Cerca de 11 kB de HTML, 7 kB de CSS e 4 kB de JS (gzip), fontes locais com `font-display: swap` e nenhuma requisição de terceiros.
