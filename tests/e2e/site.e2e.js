@@ -119,10 +119,20 @@ describe('01 · hero cinematográfico', () => {
     await page.waitForTimeout(400);
     const spot = await page.locator('[data-spotlight]').evaluate((el) => el.style.transform);
     assert.match(spot, /translate3d\((8\d\d|9\d\d)\.?\d*px/);
-    const ring = await page.locator('[data-cursor]').evaluate((el) => getComputedStyle(el).pointerEvents);
-    assert.equal(ring, 'none');
-    // cursor nativo preservado
-    assert.notEqual(await page.evaluate(() => getComputedStyle(document.body).cursor), 'none');
+    for (const sel of ['[data-cursor]', '[data-cursor-dot]']) {
+      const el = page.locator(sel);
+      assert.equal(await el.evaluate((n) => getComputedStyle(n).pointerEvents), 'none', `${sel} não bloqueia cliques`);
+      assert.equal(await el.evaluate((n) => getComputedStyle(n).opacity), '1', `${sel} visível`);
+    }
+    // ponto segue o mouse sem atraso; cursor do sistema substituído pelo customizado
+    assert.match(await page.locator('[data-cursor-dot]').evaluate((el) => el.style.transform), /translate3d\(900px, 500px/);
+    assert.equal(await page.evaluate(() => getComputedStyle(document.querySelector('.pill')).cursor), 'none');
+    // e os cliques continuam chegando aos links por baixo
+    const hit = await page.evaluate(() => {
+      const r = document.querySelector('.pill--solid').getBoundingClientRect();
+      return document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2)?.closest('a')?.hash;
+    });
+    assert.equal(hit, '#projetos');
     await context.close();
   });
 
@@ -301,6 +311,8 @@ describe('acessibilidade de movimento, toque e sem JavaScript', () => {
     const { page, context } = await open({ reducedMotion: 'reduce' });
     assert.ok(!(await page.evaluate(() => document.documentElement.classList.contains('has-cursor'))));
     assert.ok(!(await page.evaluate(() => document.documentElement.classList.contains('reveal-ready'))));
+    await page.mouse.move(400, 300, { steps: 3 });
+    assert.equal(await page.evaluate(() => getComputedStyle(document.querySelector('.pill')).cursor), 'pointer', 'cursor do sistema mantido');
     await scrollToEl(page, '.project');
     const card = page.locator('.project').first();
     const box = await card.boundingBox();

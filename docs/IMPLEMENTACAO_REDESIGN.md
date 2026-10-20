@@ -38,7 +38,9 @@ Build de produção: HTML 10,8 kB gz · CSS 7,4 kB gz · JS 3,7 kB gz · fontes 
 - CTAs reais: “Ver projetos” (`#projetos`), GitHub e LinkedIn (nova aba), com magnetismo.
 - Dock em pílula glass, fixo, entra após o hero (animação sem CLS), link ativo por seção (`aria-current`), rola
   sozinho na horizontal para manter o link ativo visível em telas estreitas. Barra de progresso de leitura.
-- Anel que acompanha o cursor (só ponteiro fino e sem movimento reduzido); cursor nativo preservado.
+- Cursor customizado do design: ponto que segue o mouse sem atraso + anel interpolado em modo `difference`, que
+  cresce e preenche sobre links e botões. Só com mouse/trackpad e sem movimento reduzido; o cursor do sistema
+  some apenas após o primeiro movimento e volta se o JS falhar ou a preferência mudar.
 
 ### 02 · Projetos interativos
 - `render/sections/projects.js`, `render/sections/featured.js`, `scripts/pipeline.js`, `scripts/tabs.js`.
@@ -81,7 +83,6 @@ Build de produção: HTML 10,8 kB gz · CSS 7,4 kB gz · JS 3,7 kB gz · fontes 
 | Design | Implementado | Motivo |
 | --- | --- | --- |
 | Placeholder “screenshot do dashboard Metabase” | Diagrama do modelo dimensional | Não há captura real; a spec proíbe placeholder e imagem inventada |
-| `cursor: none` + ponto + anel | Só o anel; ponteiro nativo visível | Spec: não esconder o ponteiro nativo |
 | Linha do e-mail inteira = botão “copiar” | Link `mailto:` + botão “Copiar” | Spec exige `mailto:` real |
 | `#7a7a80`, `#6e6e74`, `#5a5a60` em textos pequenos | Tokens com contraste ≥ 4,5:1 (`#7e7e84`) e 3,9:1 na faixa (texto grande) | WCAG AA |
 | Jornada só por hover/clique | Também avança com o scroll | Requisito “timeline animada no scroll” |

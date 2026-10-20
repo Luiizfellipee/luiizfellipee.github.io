@@ -21,6 +21,7 @@ export const renderBackdrop = () => html`
   </div>
   <div class="progress" data-progress aria-hidden="true"></div>
   <div class="cursor-ring" data-cursor aria-hidden="true"></div>
+  <div class="cursor-dot" data-cursor-dot aria-hidden="true"></div>
 `;
 
 export const renderHeader = ({ profile }) => html`

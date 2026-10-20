@@ -115,7 +115,7 @@ existente e as interações em JS vanilla.
 | `anp-fuel-prices` | **Não incluir** | Não está no design nem no site anterior; registrado como sugestão |
 | Experiência | Acordeão (um cargo aberto por vez), como no design | Requisito 03 (expansível e acessível) |
 | Jornada | Trilha do design + avanço pelo scroll | Requisito 03 pede timeline animada no scroll; o design só reagia a hover/clique |
-| Cursor customizado | Anel mantido; ponto e `cursor: none` **não** aplicados | A spec proíbe esconder o ponteiro nativo |
+| Cursor customizado | Igual ao design (ponto + anel, cursor do sistema oculto), a pedido do usuário | A spec desaconselhava esconder o ponteiro nativo; o usuário preferiu o do design. Salvaguardas: só com mouse/trackpad, desligado com movimento reduzido, oculto só após o primeiro movimento, cursor do sistema volta sem JS |
 | E-mail no contato | Link `mailto:` real + botão “Copiar” (no design a linha inteira era só “copiar”) | A spec exige `mailto:` |
 | Cinzas abaixo de AA | `#7a7a80` → `#7e7e84`; textos pequenos em `#6e6e74`/`#5a5a60` passam para tokens ≥ 4,5:1; faixa de skills para 3,9:1 (texto grande) | WCAG AA |
 | `og-image.png`, `favicon.svg`, `apple-touch-icon.png` | Refeitos em monocromático | Identidade consistente |

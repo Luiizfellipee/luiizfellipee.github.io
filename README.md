@@ -92,8 +92,8 @@ Como este é um site de usuário (`<usuario>.github.io`), ele é servido na raiz
 ## Decisões técnicas
 
 - **Sem framework no runtime.** Página única e estática; as interações (tilt, luz, magnetismo, acordeão, abas, trilha no scroll) cabem em CSS, `IntersectionObserver` e `requestAnimationFrame`. React adicionaria peso sem benefício.
-- **Um único listener de ponteiro** alimenta luz, tilt, magnetismo, anel e parallax; o laço de animação só roda enquanto há movimento. Animações contínuas (faixa, pipeline) param fora da tela.
+- **Um único listener de ponteiro** alimenta luz, tilt, magnetismo, cursor customizado e parallax; o laço de animação só roda enquanto há movimento. Animações contínuas (faixa, pipeline) param fora da tela.
 - **Progressive enhancement.** Sem JavaScript todo o conteúdo fica visível; o JS só recolhe painéis e adiciona efeitos.
-- **Acessibilidade.** HTML semântico, um único `h1`, skip link, `aria-expanded`/`aria-controls` no acordeão, abas WAI-ARIA com setas, foco visível, contraste AA verificado em teste, `prefers-reduced-motion` e `prefers-reduced-transparency`, fallback sólido sem `backdrop-filter`, cursor nativo preservado.
+- **Acessibilidade.** HTML semântico, um único `h1`, skip link, `aria-expanded`/`aria-controls` no acordeão, abas WAI-ARIA com setas, foco visível, contraste AA verificado em teste, `prefers-reduced-motion` e `prefers-reduced-transparency`, fallback sólido sem `backdrop-filter`. O cursor customizado só substitui o do sistema com mouse/trackpad e sem movimento reduzido.
 - **SEO.** Title e description reais, canonical, Open Graph com imagem 1200×630, JSON-LD (`ProfilePage` e `Person`), `robots.txt` e `sitemap.xml`.
 - **Performance.** Cerca de 11 kB de HTML, 7 kB de CSS e 4 kB de JS (gzip), fontes locais com `font-display: swap` e nenhuma requisição de terceiros.

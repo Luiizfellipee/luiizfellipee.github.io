@@ -41,11 +41,11 @@ Testes E2E (`tests/e2e/site.e2e.js`), no Chrome:
 | --- | --- |
 | Layout | Sem erros de console nem exceções; sem overflow horizontal em 320, 375, 768, 1024 e 1440 px (página percorrida inteira em cada largura) |
 | Teclado | Skip link é o primeiro foco e leva a `#conteudo` |
-| 01 Hero | `h1` = “Luiz Felipe”; ≥ 10 letras com animação de entrada; dock `position: fixed` com `backdrop-filter: blur`; “Ver projetos” leva a `#projetos` e o dock marca “Projetos” com `aria-current`; luz do fundo segue o mouse; anel com `pointer-events: none`; cursor nativo ≠ `none`; título cabe em 320 px |
+| 01 Hero | `h1` = “Luiz Felipe”; ≥ 10 letras com animação de entrada; dock `position: fixed` com `backdrop-filter: blur`; “Ver projetos” leva a `#projetos` e o dock marca “Projetos” com `aria-current`; luz do fundo segue o mouse; ponto e anel visíveis com `pointer-events: none`, ponto na posição exata do mouse, cursor do sistema substituído (`none`) e o clique continua chegando ao link por baixo; título cabe em 320 px |
 | 02 Projetos | Hover aplica `rotateX/rotateY` e `--mx` ao card e remove ao sair; foco por teclado muda a borda do card; links reais dos repositórios; “Ver estudo de caso” leva a `#destaque`; etapas do pipeline acendem; abas por clique, `ArrowRight`, `End` e hover mostram o painel certo |
 | 03 Skills/trajetória | Todas as competências no texto da seção; faixa se move; card de skill com tilt; acordeão por clique, Enter e Espaço com `aria-expanded` e um aberto por vez; jornada vai da 1ª à última etapa só com scroll (`--fill` = 1), aceita clique e `ArrowLeft` |
 | 04 Contato | Um `mailto:` com o e-mail real; botão “Copiar” recebe deslocamento magnético sem mover a linha clicável (mesmo `boundingBox`, e o ponto sob o ponteiro continua sendo o `mailto:`); copia o e-mail real para a área de transferência, mostra “Copiado” e anuncia; LinkedIn e GitHub presentes; “Voltar ao topo” leva a `#topo` |
-| Movimento reduzido | Sem `has-cursor` e sem `reveal-ready`; hover não aplica tilt; faixa parada; pipeline estático com as 6 etapas acesas; letras do nome com opacidade 1 |
+| Movimento reduzido | Sem `has-cursor` e sem `reveal-ready`; cursor do sistema mantido; hover não aplica tilt; faixa parada; pipeline estático com as 6 etapas acesas; letras do nome com opacidade 1 |
 | Toque (375 px, `hasTouch`, `isMobile`) | Sem efeitos de cursor; toque abre cargo e troca aba; toque no dock leva a `#contato` e marca o link ativo |
 | Sem JavaScript | Cargos, painéis de implementação e da jornada visíveis; conteúdo com opacidade 1 |
 

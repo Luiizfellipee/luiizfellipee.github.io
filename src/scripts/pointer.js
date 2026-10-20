@@ -12,6 +12,7 @@ const HOVER_TARGETS = 'a, button, [data-hover]';
 export function initPointer() {
   const root = document.documentElement;
   const ring = document.querySelector('[data-cursor]');
+  const dot = document.querySelector('[data-cursor-dot]');
   const spotlight = document.querySelector('[data-spotlight]');
   const orbs = [...document.querySelectorAll('[data-orb]')].map((el) => ({ el, k: Number(el.dataset.orb) }));
 
@@ -96,7 +97,11 @@ export function initPointer() {
     applyMagnet();
     hovering = Boolean(target?.closest(HOVER_TARGETS));
     ring.classList.toggle('is-hover', hovering);
-    ring.style.opacity = '';
+    // O ponto segue o mouse sem atraso; o anel vem interpolado em tick().
+    dot.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+    ring.style.opacity = dot.style.opacity = '';
+    // O cursor do sistema só some depois que o customizado já está na tela.
+    root.classList.add('cursor-live');
     schedule();
   };
 
@@ -104,13 +109,14 @@ export function initPointer() {
     spot = swap(spot, null, resetSpot);
     tilt = swap(tilt, null, (el) => (el.style.transform = ''));
     magnet = swap(magnet, null, (el) => (el.style.transform = ''));
-    ring.style.opacity = '0';
+    ring.style.opacity = dot.style.opacity = '0';
   };
 
   const update = () => {
     enabled = pointerEffectsAllowed();
     root.classList.toggle('has-cursor', enabled);
     if (!enabled) {
+      root.classList.remove('cursor-live');
       onLeave();
       cancelAnimationFrame(raf);
       raf = 0;
@@ -119,8 +125,8 @@ export function initPointer() {
     }
   };
 
-  if (!ring || !spotlight) return;
-  ring.style.opacity = '0'; // aparece no primeiro movimento do mouse
+  if (!ring || !dot || !spotlight) return;
+  ring.style.opacity = dot.style.opacity = '0'; // aparecem no primeiro movimento do mouse
   document.addEventListener('pointermove', onMove, { passive: true });
   document.documentElement.addEventListener('pointerleave', onLeave);
   onPreferenceChange(update);

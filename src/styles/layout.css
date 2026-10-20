@@ -109,7 +109,33 @@
   pointer-events: none;
 }
 
-/* Anel que acompanha o cursor (apenas ponteiro fino; o cursor nativo continua visível) */
+/* Cursor customizado: ponto que segue o mouse + anel interpolado, em modo "difference".
+   Só com mouse/trackpad e sem movimento reduzido (classe `has-cursor`, em pointer.js);
+   o cursor do sistema some apenas depois do primeiro movimento (`cursor-live`). */
+.has-cursor.cursor-live,
+.has-cursor.cursor-live * {
+  cursor: none !important;
+}
+
+.cursor-dot {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 101;
+  display: none;
+  width: 6px;
+  height: 6px;
+  margin: -3px 0 0 -3px;
+  border-radius: 50%;
+  background: var(--white);
+  mix-blend-mode: difference;
+  pointer-events: none;
+}
+
+.has-cursor .cursor-dot {
+  display: block;
+}
+
 .cursor-ring {
   position: fixed;
   left: 0;
