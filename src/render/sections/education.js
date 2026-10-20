@@ -6,39 +6,40 @@ export const renderEducation = ({ education, certifications, awards }) => html`
     <div class="container">
       ${sectionHead({ id: 'formacao-title', index: '07', label: 'Formação', title: 'Formação acadêmica' })}
 
-      <ul class="education">
+      <ul class="degrees" data-reveal>
         ${education.map(
-          (e) => html`<li class="degree${e.highlight ? ' degree--highlight' : ''}" data-reveal>
+          (e) => html`<li class="degree" data-hover>
             <p class="degree__period">${e.period}</p>
-            <div>
-              <h3 class="degree__course">${e.course}</h3>
-              <p class="degree__institution">${e.institution}</p>
-            </div>
-            <p class="badge${e.status === 'Em andamento' ? ' badge--active' : ''}">${e.status}</p>
+            <h3 class="degree__course">${e.course}</h3>
+            <p class="degree__meta"><span>${e.institution}</span><span class="degree__status">${e.status}</span></p>
           </li>`,
         )}
       </ul>
 
       <div class="credentials">
-        <div class="credentials__col" data-reveal>
-          <h3 class="subhead">Certificações</h3>
-          ${certifications.map(
-            (c) => html`<div class="cert-group">
-              <p class="cert-group__title">${c.group}</p>
-              <ul class="cert-list">${c.items.map((i) => html`<li>${i}</li>`)}</ul>
-            </div>`,
-          )}
-        </div>
-        <div class="credentials__col" data-reveal>
-          <h3 class="subhead">Reconhecimentos</h3>
-          <ul class="awards">
-            ${awards.map(
-              (a) => html`<li class="award">
-                <p class="award__title">${a.title}</p>
-                <p class="award__by">${a.by}</p>
-              </li>`,
+        <div data-reveal>
+          <section class="card credential" data-spot aria-labelledby="certificacoes-title">
+            <h3 class="credential__title" id="certificacoes-title">Certificações</h3>
+            ${certifications.map(
+              (c) => html`<div class="cert-group">
+                <p class="cert-group__title">${c.group}</p>
+                <ul class="cert-list">${c.items.map((i) => html`<li>${i}</li>`)}</ul>
+              </div>`,
             )}
-          </ul>
+          </section>
+        </div>
+        <div data-reveal style="--delay: 120ms">
+          <section class="card credential" data-spot aria-labelledby="reconhecimentos-title">
+            <h3 class="credential__title" id="reconhecimentos-title">Reconhecimentos</h3>
+            <ul>
+              ${awards.map(
+                (a) => html`<li class="award">
+                  <p class="award__title">${a.title}</p>
+                  <p class="award__by">${a.by}</p>
+                </li>`,
+              )}
+            </ul>
+          </section>
         </div>
       </div>
     </div>

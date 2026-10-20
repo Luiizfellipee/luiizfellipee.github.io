@@ -1,22 +1,33 @@
 import { html } from '../html.js';
-import { icons } from '../icons.js';
+
+export const pad = (n) => String(n).padStart(2, '0');
+
+export const eyebrow = (index, label) => html`
+  <p class="eyebrow"><span>${index}</span><span class="eyebrow__line" aria-hidden="true"></span><span>${label}</span></p>
+`;
 
 export const sectionHead = ({ id, index, label, title, intro }) => html`
-  <header class="section-head" data-reveal>
-    <p class="eyebrow"><span class="eyebrow__index">${index}</span> ${label}</p>
+  <header data-reveal>
+    ${eyebrow(index, label)}
     <h2 class="section-title" id="${id}">${title}</h2>
     ${intro ? html`<p class="section-intro">${intro}</p>` : ''}
   </header>
 `;
 
-export const tagList = (tags, label = 'Tecnologias') => html`
-  <ul class="tags" aria-label="${label}">
-    ${tags.map((tag) => html`<li>${tag}</li>`)}
-  </ul>
+// Botão em pílula. `external` abre em nova aba; `magnetic` ativa o efeito de pointer.js.
+export const pill = (href, label, { variant = 'solid', size = '', external = false, magnetic = true, arrow = '' } = {}) => html`
+  <a
+    class="pill pill--${variant}${size ? ` pill--${size}` : ''}"
+    href="${href}"
+    ${external ? html`target="_blank" rel="noopener noreferrer"` : ''}
+    ${magnetic ? html`data-mag` : ''}
+  >${label}${arrow ? html` <span class="pill__arrow" aria-hidden="true">${arrow}</span>` : ''}${external
+      ? html`<span class="sr-only"> (abre em nova aba)</span>`
+      : ''}</a>
 `;
 
-export const externalLink = (href, text, className = 'text-link') => html`
-  <a class="${className}" href="${href}" target="_blank" rel="noopener noreferrer">
-    ${text}${icons.external}<span class="sr-only"> (abre em nova aba)</span>
-  </a>
+export const chips = (items, { outline = false, className = '', label = 'Tecnologias' } = {}) => html`
+  <ul class="chips${className ? ` ${className}` : ''}" aria-label="${label}">
+    ${items.map((item) => html`<li class="chip${outline ? ' chip--outline' : ''}">${item}</li>`)}
+  </ul>
 `;

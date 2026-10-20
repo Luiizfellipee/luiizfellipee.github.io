@@ -8,19 +8,19 @@ html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
   scroll-behavior: smooth;
-  scroll-padding-top: calc(var(--header-h) + 16px);
+  scroll-padding-top: 88px;
 }
 
 body {
   margin: 0;
+  min-height: 100vh;
   background: var(--bg);
   color: var(--text);
   font-family: var(--font-sans);
-  font-size: var(--fs-base);
-  line-height: 1.65;
+  font-size: 16px;
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
   overflow-x: clip;
 }
 
@@ -46,12 +46,8 @@ ol {
 
 h1,
 h2,
-h3,
-h4 {
-  font-weight: 600;
-  line-height: 1.2;
-  letter-spacing: -0.015em;
-  text-wrap: balance;
+h3 {
+  font-weight: 500;
 }
 
 p {
@@ -59,8 +55,12 @@ p {
 }
 
 a {
-  color: inherit;
+  color: var(--text);
   text-decoration: none;
+}
+
+a:hover {
+  color: var(--white);
 }
 
 button {
@@ -68,26 +68,22 @@ button {
   color: inherit;
 }
 
-strong {
-  font-weight: 600;
-  color: var(--text);
-}
-
 ::selection {
-  background: var(--accent);
-  color: var(--accent-ink);
+  background: var(--text);
+  color: var(--ink);
 }
 
 :focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--text);
   outline-offset: 3px;
-  border-radius: 4px;
 }
 
-.icon {
-  flex: none;
-  width: 1.05em;
-  height: 1.05em;
+main:focus {
+  outline: none;
+}
+
+.mono {
+  font-family: var(--font-mono);
 }
 
 .sr-only {
@@ -103,33 +99,23 @@ strong {
 }
 
 .skip-link {
-  position: absolute;
-  top: 8px;
-  left: 8px;
-  z-index: 100;
-  padding: 0.6rem 1rem;
-  border-radius: var(--radius-sm);
-  background: var(--accent);
-  color: var(--accent-ink);
-  font-weight: 600;
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 200;
+  padding: 10px 18px;
+  border-radius: var(--radius-pill);
+  background: var(--text);
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 500;
   transform: translateY(-160%);
-  transition: transform var(--dur) var(--ease);
+  transition: transform 0.25s var(--ease);
 }
 
 .skip-link:focus {
   transform: none;
-}
-
-.mono {
-  font-family: var(--font-mono);
-}
-
-.muted {
-  color: var(--text-3);
-}
-
-.small {
-  font-size: var(--fs-sm);
+  color: var(--ink);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -142,6 +128,8 @@ strong {
   *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
+    animation-delay: 0ms !important;
     transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
   }
 }

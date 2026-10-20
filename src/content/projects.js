@@ -13,6 +13,9 @@ export const featuredProject = {
   solution:
     'Um pipeline reprodutível, que vai da planilha bruta ao dashboard e trata a qualidade do dado antes da visualização. O ambiente inteiro sobe já configurado, em conceito plug and play.',
   pipeline: ['Planilha PBH', 'Pandas', 'Parquet', 'PostgreSQL', 'Views SQL', 'Metabase'],
+  // Modelo dimensional descrito na implementação; desenhado no card do projeto
+  // no lugar de uma captura de tela (o repositório não tem imagens do dashboard).
+  schema: { fact: 'boletins', dimensions: ['envolvidos', 'veículos', 'logradouros', 'coordenadas'] },
   tech: ['Python', 'Pandas', 'Jupyter', 'Parquet', 'PostgreSQL 15', 'SQLAlchemy', 'Docker Compose', 'Metabase'],
   implementation: [
     ['Tratamento', 'Exploração e limpeza em Jupyter com Pandas: separação das abas, verificação de nulos e tipos. Os dados tratados são salvos em Parquet.'],

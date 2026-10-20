@@ -1,5 +1,4 @@
 import { html } from '../html.js';
-import { icons } from '../icons.js';
 
 export const navItems = [
   ['sobre', 'Sobre'],
@@ -7,32 +6,29 @@ export const navItems = [
   ['skills', 'Skills'],
   ['projetos', 'Projetos'],
   ['jornada', 'Jornada'],
+  ['formacao', 'Formação'],
   ['contato', 'Contato'],
 ];
 
+// Camadas decorativas fixas (fundo, progresso de leitura e anel do cursor).
+export const renderBackdrop = () => html`
+  <div class="backdrop" aria-hidden="true">
+    <div class="orb orb--1" data-orb="1"><span class="orb__glow"></span></div>
+    <div class="orb orb--2" data-orb="-1.4"><span class="orb__glow"></span></div>
+    <div class="orb orb--3" data-orb="0.6"><span class="orb__glow"></span></div>
+    <div class="backdrop__grid"></div>
+    <div class="backdrop__spot" data-spotlight></div>
+  </div>
+  <div class="progress" data-progress aria-hidden="true"></div>
+  <div class="cursor-ring" data-cursor aria-hidden="true"></div>
+`;
+
 export const renderHeader = ({ profile }) => html`
   <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
-  <header class="site-header" data-header>
-    <div class="container site-header__inner">
-      <a class="brand" href="#topo" aria-label="${profile.name}, voltar ao início">
-        <span class="brand__mark" aria-hidden="true">LF</span>
-        <span class="brand__name">${profile.name}</span>
-      </a>
-
-      <nav class="nav" aria-label="Principal">
-        <button class="nav__toggle" type="button" aria-expanded="false" aria-controls="nav-menu" data-nav-toggle>
-          ${icons.menu}<span class="sr-only">Abrir menu</span>
-        </button>
-        <div class="nav__menu" id="nav-menu" data-nav-menu>
-          <ul class="nav__list">
-            ${navItems.map(([id, label]) => html`<li><a class="nav__link" href="#${id}" data-nav-link>${label}</a></li>`)}
-          </ul>
-          <div class="nav__social">
-            <a class="icon-link" href="${profile.links.github}" target="_blank" rel="noopener noreferrer" aria-label="GitHub (abre em nova aba)">${icons.github}</a>
-            <a class="icon-link" href="${profile.links.linkedin}" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn (abre em nova aba)">${icons.linkedin}</a>
-          </div>
-        </div>
-      </nav>
-    </div>
-  </header>
+  <nav class="dock" aria-label="Principal">
+    <a class="dock__brand" href="#topo" data-mag aria-label="LF · ${profile.name}, voltar ao início">LF</a>
+    <ul class="dock__links" data-nav>
+      ${navItems.map(([id, label]) => html`<li><a class="dock__link" href="#${id}" data-nav-link>${label}</a></li>`)}
+    </ul>
+  </nav>
 `;

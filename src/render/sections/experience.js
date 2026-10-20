@@ -1,28 +1,27 @@
 import { html } from '../html.js';
-import { sectionHead, tagList } from './shared.js';
+import { chips, sectionHead } from './shared.js';
 
-const itemList = (items) => html`
-  <ul class="role__items">
-    ${items.map(([title, text]) => html`<li><strong>${title}.</strong> ${text}</li>`)}
-  </ul>
-`;
-
-const renderRole = (role) => html`
-  <li class="role role--${role.detail}${role.period.includes('atual') ? ' role--current' : ''}" data-reveal>
-    <div class="role__meta">
-      <p class="role__period">${role.period}</p>
-      ${role.location ? html`<p class="role__location">${role.location}</p>` : ''}
-    </div>
-    <div class="role__main">
-      <h4 class="role__title">${role.title}</h4>
-      ${role.summary ? html`<p class="role__summary">${role.summary}</p>` : ''}
-      ${role.detail === 'full'
-        ? itemList(role.items)
-        : html`<details class="role__details">
-            <summary>Ver responsabilidades</summary>
-            ${itemList(role.items)}
-          </details>`}
-      ${role.tags ? tagList(role.tags) : ''}
+// Acordeão: um cargo aberto por vez (o mais recente, por padrão). Sem JS todos ficam abertos.
+const renderRole = (role, id, open) => html`
+  <li class="role${open ? ' is-open' : ''}" data-role>
+    <h4 class="role__heading">
+      <button class="role__toggle" type="button" id="${id}-btn" aria-expanded="${String(open)}" aria-controls="${id}" data-hover>
+        <span class="role__period">${role.period}</span>
+        <span class="role__title">${role.title}</span>
+        <span class="role__icon" aria-hidden="true">+</span>
+      </button>
+    </h4>
+    <div class="role__panel" id="${id}" role="region" aria-labelledby="${id}-btn">
+      ${role.summary || role.location
+        ? html`<p class="role__summary">${role.summary ?? ''}${role.location ? ` ${role.location}.` : ''}</p>`
+        : ''}
+      ${role.items.map(
+        ([title, text]) => html`<div class="card achievement" data-spot>
+          <p class="achievement__title">${title}.</p>
+          <p class="achievement__text">${text}</p>
+        </div>`,
+      )}
+      ${role.tags ? chips(role.tags, { outline: true, className: 'role__tags' }) : ''}
     </div>
   </li>
 `;
@@ -37,16 +36,16 @@ export const renderExperience = ({ experience }) => html`
         title: 'Trajetória profissional',
         intro: 'Do atendimento técnico e da gestão de dados comerciais à engenharia de qualidade, com validação de dados, automação e IA aplicada.',
       })}
-      <div class="timeline">
+      <div class="companies" data-accordion>
         ${experience.map(
-          (job) => html`
-            <article class="company">
-              <header class="company__head" data-reveal>
+          (job, j) => html`
+            <article class="company" data-reveal>
+              <header class="company__head">
                 <h3 class="company__name">${job.company}</h3>
                 <p class="company__meta">${job.tenure} · ${job.location}</p>
               </header>
               <ol class="company__roles">
-                ${job.roles.map(renderRole)}
+                ${job.roles.map((role, r) => renderRole(role, `cargo-${j + 1}-${r + 1}`, j === 0 && r === 0))}
               </ol>
             </article>
           `,

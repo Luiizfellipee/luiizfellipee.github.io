@@ -7,3 +7,6 @@ Thumbs.db
 
 # Fontes pessoais usadas para gerar o conteúdo (não publicar)
 files/
+
+# Saída dos testes E2E (capturas de tela)
+test-results/

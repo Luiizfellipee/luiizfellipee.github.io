@@ -65,3 +65,19 @@ export const skillGroups = [
     ],
   },
 ];
+
+// Faixa em movimento da seção de skills (decorativa). Só itens que já constam acima.
+export const highlights = [
+  'Cypress',
+  'PostgreSQL',
+  'Python',
+  'Pandas',
+  'Docker',
+  'GitHub Actions',
+  'Metabase',
+  'pytest',
+  'Jira',
+  'Git',
+  'Machine Learning',
+  'Data Quality',
+];

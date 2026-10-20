@@ -3,12 +3,12 @@
 
 import { profile, site } from '../content/profile.js';
 import { experience } from '../content/experience.js';
-import { skillGroups } from '../content/skills.js';
+import { highlights, skillGroups } from '../content/skills.js';
 import { featuredProject, projects } from '../content/projects.js';
 import { journey, statuses } from '../content/journey.js';
 import { awards, certifications, education } from '../content/education.js';
 import { html, toString } from './html.js';
-import { renderHeader } from './sections/header.js';
+import { renderBackdrop, renderHeader } from './sections/header.js';
 import { renderHero } from './sections/hero.js';
 import { renderAbout } from './sections/about.js';
 import { renderExperience } from './sections/experience.js';
@@ -17,15 +17,14 @@ import { renderProjects } from './sections/projects.js';
 import { renderFeatured } from './sections/featured.js';
 import { renderJourney } from './sections/journey.js';
 import { renderEducation } from './sections/education.js';
-import { renderGithub } from './sections/github.js';
-import { renderContact } from './sections/contact.js';
-import { renderFooter } from './sections/footer.js';
+import { renderContact, renderFooter } from './sections/contact.js';
 
 const data = {
   profile,
   site,
   experience,
   skillGroups,
+  highlights,
   featuredProject,
   projects,
   journey,
@@ -38,17 +37,16 @@ const data = {
 
 export const renderBody = () =>
   toString(html`
+    ${renderBackdrop()}
     ${renderHeader(data)}
-    <main id="conteudo">
+    <main id="conteudo" tabindex="-1">
       ${renderHero(data)}
       ${renderAbout(data)}
       ${renderExperience(data)}
       ${renderSkills(data)}
-      ${renderProjects(data)}
-      ${renderFeatured(data)}
+      ${renderProjects(data, renderFeatured(data))}
       ${renderJourney(data)}
       ${renderEducation(data)}
-      ${renderGithub(data)}
       ${renderContact(data)}
     </main>
     ${renderFooter(data)}

@@ -3,25 +3,25 @@ import { sectionHead } from './shared.js';
 
 export const renderAbout = ({ profile }) => html`
   <section class="section" id="sobre" aria-labelledby="sobre-title">
-    <div class="container about">
+    <div class="container">
       ${sectionHead({ id: 'sobre-title', index: '01', label: 'Sobre', title: 'Qualidade como base para dados confiáveis' })}
-      <div class="about__body">
-        <div class="prose" data-reveal>
+      <div class="about__grid">
+        <div class="about__text" data-reveal>
           ${profile.about.map((p) => html`<p>${p}</p>`)}
         </div>
-        <aside class="about__aside" data-reveal>
-          <blockquote class="quote">
-            <p>“${profile.quote}”</p>
+        <div class="about__aside" data-reveal style="--delay: 120ms">
+          <blockquote class="card card--hover quote" data-spot>
+            <p>${profile.quote}</p>
           </blockquote>
           <dl class="facts">
             ${profile.facts.map(
-              (f) => html`<div class="facts__item">
+              (f) => html`<div class="card fact" data-spot data-hover>
                 <dt>${f.label}</dt>
-                <dd>${f.value}${f.note ? html` <span class="muted">· ${f.note}</span>` : ''}</dd>
+                <dd>${f.value}${f.note ? ` · ${f.note}` : ''}</dd>
               </div>`,
             )}
           </dl>
-        </aside>
+        </div>
       </div>
     </div>
   </section>

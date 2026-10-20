@@ -1,15 +1,15 @@
-// Aparecimento progressivo ao rolar. Sem JS ou com reduced motion, o conteúdo
+// Aparecimento progressivo ao rolar. Sem JS ou com movimento reduzido, o conteúdo
 // permanece visível (a classe `reveal-ready` só é aplicada aqui).
+import { reducedMotion } from './env.js';
 
 export function initReveal() {
-  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (reduced || !('IntersectionObserver' in window)) return;
+  if (reducedMotion.matches || !('IntersectionObserver' in window)) return;
 
   const items = [...document.querySelectorAll('[data-reveal]')];
-  // Elementos já visíveis no carregamento não são animados (evita "piscar").
-  for (const el of items) {
-    if (el.getBoundingClientRect().top < window.innerHeight) el.classList.add('is-visible');
-  }
+  // O que já está na tela ao carregar não é animado (evita "piscar").
+  // Todas as leituras de layout antes das escritas, para não forçar reflows em série.
+  const onScreen = items.filter((el) => el.getBoundingClientRect().top < innerHeight * 0.9);
+  for (const el of onScreen) el.classList.add('is-visible');
   document.documentElement.classList.add('reveal-ready');
 
   const observer = new IntersectionObserver(
@@ -20,7 +20,12 @@ export function initReveal() {
         observer.unobserve(entry.target);
       }
     },
-    { rootMargin: '0px 0px -8% 0px', threshold: 0.05 },
+    { rootMargin: '0px 0px -6% 0px', threshold: 0.08 },
   );
   items.filter((el) => !el.classList.contains('is-visible')).forEach((el) => observer.observe(el));
+
+  // Ao navegar por âncora ou foco por teclado, revela o destino na hora.
+  document.addEventListener('focusin', (event) => {
+    event.target.closest?.('[data-reveal]')?.classList.add('is-visible');
+  });
 }

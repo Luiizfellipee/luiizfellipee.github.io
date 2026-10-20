@@ -6,24 +6,22 @@ import './styles/sections.css';
 
 import { initNav } from './scripts/nav.js';
 import { initReveal } from './scripts/reveal.js';
+import { initPointer } from './scripts/pointer.js';
+import { initScramble } from './scripts/scramble.js';
+import { initAccordion } from './scripts/accordion.js';
+import { initMarquee } from './scripts/marquee.js';
+import { initPipeline } from './scripts/pipeline.js';
+import { initTabs } from './scripts/tabs.js';
+import { initJourney } from './scripts/journey.js';
 import { initCopy } from './scripts/copy.js';
-import { initGithub } from './scripts/github.js';
 
 initNav();
 initReveal();
+initPointer();
+initScramble();
+initAccordion();
+initMarquee();
+initPipeline();
+initTabs();
+initJourney();
 initCopy();
-
-// A chamada à API do GitHub só acontece quando a seção se aproxima da tela.
-const githubSection = document.querySelector('#github');
-if (githubSection && 'IntersectionObserver' in window) {
-  const observer = new IntersectionObserver(
-    (entries) => {
-      if (entries.some((entry) => entry.isIntersecting)) {
-        observer.disconnect();
-        initGithub();
-      }
-    },
-    { rootMargin: '400px 0px' },
-  );
-  observer.observe(githubSection);
-}
