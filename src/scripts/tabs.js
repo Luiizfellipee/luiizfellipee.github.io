@@ -3,7 +3,8 @@
 
 export function createTabs(root, { hover = false, onSelect } = {}) {
   const list = root.querySelector('[role="tablist"]');
-  const tabs = [...root.querySelectorAll('[role="tab"]')];
+  // Só as abas da própria lista: permite abas dentro de painéis de outras abas.
+  const tabs = [...(list ?? root).querySelectorAll('[role="tab"]')];
   const panels = tabs.map((tab) => document.getElementById(tab.getAttribute('aria-controls')));
   let current = Math.max(0, tabs.findIndex((tab) => tab.getAttribute('aria-selected') === 'true'));
 

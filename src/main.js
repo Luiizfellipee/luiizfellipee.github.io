@@ -12,6 +12,7 @@ import { initAccordion } from './scripts/accordion.js';
 import { initMarquee } from './scripts/marquee.js';
 import { initPipeline } from './scripts/pipeline.js';
 import { initTabs } from './scripts/tabs.js';
+import { initShowcase } from './scripts/showcase.js';
 import { initJourney } from './scripts/journey.js';
 import { initCopy } from './scripts/copy.js';
 
@@ -23,5 +24,6 @@ initAccordion();
 initMarquee();
 initPipeline();
 initTabs();
+initShowcase();
 initJourney();
 initCopy();

@@ -653,7 +653,7 @@
 /* ───────── Projetos ───────── */
 .projects {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 460px), 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
   gap: 16px;
   margin-top: 56px;
 }
@@ -709,11 +709,6 @@
   padding-top: 28px;
 }
 
-.project__preview + .project__tags {
-  margin-top: 28px;
-  padding-top: 0;
-}
-
 .project__actions {
   display: flex;
   flex-wrap: wrap;
@@ -721,119 +716,33 @@
   margin-top: 24px;
 }
 
-/* Diagrama do modelo dimensional (substitui a captura de tela que o repositório não tem) */
-.project__preview {
-  flex: 1;
-  display: grid;
-  place-items: center;
-  gap: 10px;
-  min-height: 180px;
+/* Projetos em destaque / estudos de caso */
+.featured {
+  margin-top: 120px;
+}
+
+.featured__picker {
   margin-top: 28px;
-  padding: 20px;
-  border: 1px dashed rgb(255 255 255 / 0.14);
-  border-radius: var(--radius-md);
-  background: repeating-linear-gradient(135deg, var(--glass-soft) 0 10px, transparent 10px 20px);
 }
 
-.schema {
-  width: 100%;
-  max-width: 420px;
-  height: auto;
-  overflow: visible;
-  color: var(--text-label);
-}
-
-.schema__link {
-  stroke: currentColor;
-  stroke-width: 1;
-  stroke-dasharray: 4 5;
+.featured__index {
+  margin-right: 10px;
+  font-family: var(--font-mono);
+  font-size: 12px;
   opacity: 0.6;
 }
 
-.schema__node {
-  fill: var(--surface);
-  stroke: rgb(255 255 255 / 0.18);
+.featured__panel {
+  margin-top: 18px;
+  scroll-margin-top: 80px; /* link direto #caso-<id>: o seletor continua visível */
 }
 
-.schema__node--fact {
-  fill: var(--text);
-  stroke: none;
-}
-
-.schema__label {
-  fill: var(--text-soft);
-  font-family: var(--font-mono);
-  font-size: 12px;
-}
-
-.schema__label--fact {
-  fill: var(--ink);
-  font-weight: 500;
-}
-
-.schema-list {
+.js .featured__panel:not(.is-active) {
   display: none;
 }
 
-@media (max-width: 520px) {
-  .schema {
-    display: none;
-  }
-
-  .schema-list {
-    display: grid;
-    justify-items: center;
-    gap: 14px;
-    width: 100%;
-    font-family: var(--font-mono);
-    font-size: 12px;
-  }
-
-  .schema-list__fact {
-    padding: 8px 14px;
-    border-radius: 12px;
-    background: var(--text);
-    color: var(--ink);
-  }
-
-  .schema-list__dims {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    width: 100%;
-  }
-
-  .schema-list__dims span {
-    padding: 8px 6px;
-    border: 1px solid rgb(255 255 255 / 0.18);
-    border-radius: 10px;
-    background: var(--surface);
-    text-align: center;
-    color: var(--text-soft);
-  }
-}
-
-.schema__caption {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  color: var(--text-subtle);
-}
-
-.project:hover .schema__link,
-.project:focus-within .schema__link {
-  animation: schema-flow 1.2s linear infinite;
-  opacity: 1;
-}
-
-@keyframes schema-flow {
-  to {
-    stroke-dashoffset: -18;
-  }
-}
-
-/* Projeto em destaque / estudo de caso */
-.featured {
-  margin-top: 120px;
+.js .featured__panel.is-active {
+  animation: fade-up 0.45s var(--ease-out);
 }
 
 .featured .section-intro {
@@ -865,13 +774,13 @@
 
 .pipeline__steps {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(var(--steps, 6), 1fr);
 }
 
 .pipeline__track {
   position: absolute;
-  left: calc(100% / 12);
-  right: calc(100% / 12);
+  left: calc(100% / (2 * var(--steps, 6)));
+  right: calc(100% / (2 * var(--steps, 6)));
   top: 25px;
   height: 1px;
   background: rgb(255 255 255 / 0.14);
@@ -923,6 +832,22 @@
   background: var(--text);
   color: var(--ink);
   box-shadow: 0 0 24px rgb(255 255 255 / 0.35);
+}
+
+/* Etapa planejada: contorno tracejado, como o "objetivo" da jornada; o pacote só a contorna */
+.pipeline__step--planned .pipeline__node {
+  border-style: dashed;
+}
+
+.pipeline__step--planned.is-on .pipeline__node {
+  border-color: var(--text);
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: 0 0 24px rgb(255 255 255 / 0.18);
+}
+
+.pipeline__legend {
+  margin-top: 28px;
 }
 
 .case__grid {

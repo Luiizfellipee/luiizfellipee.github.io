@@ -166,38 +166,80 @@ describe('02 · projetos interativos', () => {
 
   test('foco por teclado destaca o card e links são reais', async () => {
     const { page, context } = await open();
-    const link = page.locator('.project a[href="https://github.com/Luiizfellipee/acidentes_bh"]').first();
+    const link = page.locator('.project a[href="https://github.com/Luiizfellipee/ES-fuel-intelligence"]').first();
     await link.focus();
     await page.waitForTimeout(450); // transição da borda
     const border = await page.locator('.project').nth(1).evaluate((el) => getComputedStyle(el).borderColor);
     assert.match(border, /0\.22\)$/);
-    for (const repo of ['auto_vagas', 'acidentes_bh']) {
+    for (const repo of ['BH-traffic-intelligence', 'ES-fuel-intelligence', 'jenkins-ci-case-study']) {
       assert.ok(await page.locator(`a[href="https://github.com/Luiizfellipee/${repo}"]`).count());
     }
-    await page.getByRole('link', { name: 'Ver estudo de caso' }).click();
+    for (const repo of ['auto_vagas', 'acidentes_bh']) {
+      assert.equal(await page.locator(`#projetos a[href="https://github.com/Luiizfellipee/${repo}"]`).count(), 0, repo);
+    }
+    await context.close();
+  });
+
+  test('cards abrem o estudo de caso certo e o seletor troca de projeto', async () => {
+    const { page, context } = await open();
+    const picker = page.locator('.featured__picker [role="tab"]');
+    assert.equal(await picker.count(), 3);
+    assert.ok(await page.locator('#caso-BH-traffic-intelligence').isVisible());
+    assert.ok(!(await page.locator('#caso-jenkins-ci-case-study').isVisible()));
+
+    // "Ver estudo de caso" do terceiro card seleciona a esteira de CI e rola até o seletor.
+    await page.locator('.project').nth(2).getByRole('link', { name: 'Ver estudo de caso' }).click();
     await page.waitForFunction(() => location.hash === '#destaque');
+    assert.equal(await picker.nth(2).getAttribute('aria-selected'), 'true');
+    assert.ok(await page.locator('#caso-jenkins-ci-case-study').isVisible());
+    assert.ok(!(await page.locator('#caso-BH-traffic-intelligence').isVisible()));
+    assert.equal(await page.evaluate(() => document.activeElement.id), 'caso-tab-jenkins-ci-case-study');
+
+    // Setas e clique no seletor.
+    await page.keyboard.press('ArrowRight');
+    assert.ok(await page.locator('#caso-BH-traffic-intelligence').isVisible());
+    await picker.nth(1).click();
+    assert.ok(await page.locator('#caso-ES-fuel-intelligence').isVisible());
+    assert.equal(await page.locator('#caso-ES-fuel-intelligence .pipeline__step--planned').count(), 2);
+    await page.waitForTimeout(500);
+    await page.screenshot({ path: `${SHOTS}/02-destaques-seletor.png` });
+
+    // Link direto para um caso.
+    const deep = await open({}, '/#caso-jenkins-ci-case-study');
+    assert.ok(await deep.page.locator('#caso-jenkins-ci-case-study').isVisible());
+    await deep.context.close();
     await context.close();
   });
 
   test('pipeline animado e abas de implementação (clique, setas e hover)', async () => {
     const { page, context } = await open();
-    await scrollToEl(page, '[data-pipeline]');
+    await scrollToEl(page, '#caso-BH-traffic-intelligence [data-pipeline]');
     await page.waitForTimeout(2500);
-    assert.ok((await page.locator('.pipeline__step.is-on').count()) > 0, 'etapas do pipeline acendem');
+    assert.ok((await page.locator('#caso-BH-traffic-intelligence .pipeline__step.is-on').count()) > 0, 'etapas do pipeline acendem');
 
-    const tabs = page.locator('[data-tabs] [role="tab"][id^="impl-tab"]');
+    // Só o pipeline visível anima; o do caso oculto fica parado.
+    assert.equal(await page.locator('#caso-jenkins-ci-case-study [data-packet]').evaluate((el) => el.style.transform), '');
+
+    const id = (n) => `#impl-BH-traffic-intelligence-${n}`;
+    const tabs = page.locator('#caso-BH-traffic-intelligence [data-tabs] [role="tab"]');
     await tabs.nth(2).click();
     assert.equal(await tabs.nth(2).getAttribute('aria-selected'), 'true');
-    assert.ok(await page.locator('#impl-3').isVisible());
-    assert.ok(!(await page.locator('#impl-1').isVisible()));
+    assert.ok(await page.locator(id(3)).isVisible());
+    assert.ok(!(await page.locator(id(1)).isVisible()));
     await page.keyboard.press('ArrowRight');
-    assert.equal(await page.evaluate(() => document.activeElement.id), 'impl-tab-4');
-    assert.ok(await page.locator('#impl-4').isVisible());
+    assert.equal(await page.evaluate(() => document.activeElement.id), 'impl-tab-BH-traffic-intelligence-4');
+    assert.ok(await page.locator(id(4)).isVisible());
     await page.keyboard.press('End');
-    assert.ok(await page.locator('#impl-5').isVisible());
+    assert.ok(await page.locator(id(5)).isVisible());
     await tabs.nth(1).hover();
-    assert.ok(await page.locator('#impl-2').isVisible());
-    await scrollToEl(page, '.case');
+    assert.ok(await page.locator(id(2)).isVisible());
+
+    // Trocar de caso mantém as abas do outro caso independentes e reinicia a animação.
+    await page.locator('#caso-tab-jenkins-ci-case-study').click();
+    await page.waitForTimeout(1500);
+    assert.ok((await page.locator('#caso-jenkins-ci-case-study .pipeline__step.is-on').count()) > 0);
+    assert.ok(await page.locator('#impl-jenkins-ci-case-study-1').isVisible());
+    await scrollToEl(page, '#caso-jenkins-ci-case-study .case');
     await page.screenshot({ path: `${SHOTS}/02-estudo-de-caso.png` });
     await context.close();
   });
@@ -323,7 +365,7 @@ describe('acessibilidade de movimento, toque e sem JavaScript', () => {
     await page.waitForTimeout(400);
     assert.equal(await page.locator('[data-marquee-track]').evaluate((el) => el.style.transform), x1, 'faixa parada');
     await scrollToEl(page, '[data-pipeline]');
-    assert.equal(await page.locator('.pipeline__step.is-on').count(), 6, 'pipeline estático e completo');
+    assert.equal(await page.locator('#caso-BH-traffic-intelligence .pipeline__step.is-on').count(), 6, 'pipeline estático e completo');
     const opacity = await page.locator('.hero__char').first().evaluate((el) => getComputedStyle(el).opacity);
     assert.equal(opacity, '1');
     await context.close();
@@ -335,9 +377,14 @@ describe('acessibilidade de movimento, toque e sem JavaScript', () => {
     await scrollToEl(page, '.role__toggle:nth-of-type(1)');
     await page.locator('.role__toggle').nth(2).tap();
     assert.equal(await page.locator('.role__toggle').nth(2).getAttribute('aria-expanded'), 'true');
-    await scrollToEl(page, '#impl-tab-2');
-    await page.locator('#impl-tab-2').tap();
-    assert.ok(await page.locator('#impl-2').isVisible());
+    await scrollToEl(page, '#caso-tab-ES-fuel-intelligence');
+    await page.locator('#caso-tab-ES-fuel-intelligence').tap();
+    assert.ok(await page.locator('#caso-ES-fuel-intelligence').isVisible());
+    await scrollToEl(page, '#impl-tab-ES-fuel-intelligence-2');
+    await page.locator('#impl-tab-ES-fuel-intelligence-2').tap();
+    assert.ok(await page.locator('#impl-ES-fuel-intelligence-2').isVisible());
+    await scrollToEl(page, '#destaque', 'start');
+    await page.screenshot({ path: `${SHOTS}/mobile-375-destaques.png` });
     await page.locator('.dock__link[href="#contato"]').tap();
     await page.waitForFunction(() => location.hash === '#contato');
     await page.waitForFunction(() => document.querySelector('.dock__link.is-active')?.hash === '#contato');
@@ -347,7 +394,9 @@ describe('acessibilidade de movimento, toque e sem JavaScript', () => {
 
   test('sem JavaScript todo o conteúdo continua visível', async () => {
     const { page, context } = await open({ javaScriptEnabled: false });
-    for (const id of ['#cargo-1-2', '#cargo-2-1', '#impl-5', '#etapa-9']) assert.ok(await page.locator(id).isVisible(), id);
+    for (const id of ['#cargo-1-2', '#cargo-2-1', '#impl-jenkins-ci-case-study-5', '#caso-ES-fuel-intelligence', '#etapa-9']) {
+      assert.ok(await page.locator(id).isVisible(), id);
+    }
     assert.equal(await page.locator('[data-reveal]').first().evaluate((el) => getComputedStyle(el).opacity), '1');
     await context.close();
   });

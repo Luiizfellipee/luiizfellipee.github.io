@@ -1,12 +1,12 @@
-// Pacote de dados que percorre o pipeline do estudo de caso, acendendo cada etapa.
-// Só anima enquanto visível; com movimento reduzido todas as etapas ficam acesas.
+// Pacote de dados que percorre o pipeline de cada estudo de caso, acendendo cada etapa.
+// Só anima enquanto visível (painéis ocultos ficam parados); com movimento reduzido
+// todas as etapas ficam acesas.
 import { observeVisibility, onPreferenceChange, reducedMotion } from './env.js';
 
 const CYCLE = 5200; // ms
 
-export function initPipeline() {
-  const pipeline = document.querySelector('[data-pipeline]');
-  const packet = pipeline?.querySelector('[data-packet]');
+function animate(pipeline) {
+  const packet = pipeline.querySelector('[data-packet]');
   if (!packet) return;
   const track = packet.parentElement;
   const nodes = [...pipeline.querySelectorAll('[data-node]')];
@@ -50,4 +50,8 @@ export function initPipeline() {
   });
   onPreferenceChange(sync);
   sync();
+}
+
+export function initPipeline() {
+  document.querySelectorAll('[data-pipeline]').forEach(animate);
 }

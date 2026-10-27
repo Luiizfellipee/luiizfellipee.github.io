@@ -6,7 +6,7 @@ import { readFileSync, readdirSync } from 'node:fs';
 import { profile, site } from '../src/content/profile.js';
 import { experience } from '../src/content/experience.js';
 import { highlights, skillGroups } from '../src/content/skills.js';
-import { featuredProject, projects } from '../src/content/projects.js';
+import { projects } from '../src/content/projects.js';
 import { journey, statuses } from '../src/content/journey.js';
 import { awards, certifications, education } from '../src/content/education.js';
 import { navItems } from '../src/render/sections/header.js';
@@ -20,18 +20,25 @@ const escaped = (text) => text.replaceAll('&', '&amp;').replaceAll('"', '&quot;'
 const has = (text) => body.includes(escaped(text));
 
 test('projetos apontam para repositórios do perfil', () => {
-  for (const p of [...projects, featuredProject]) {
+  for (const p of projects) {
     assert.match(p.repo, /^https:\/\/github\.com\/Luiizfellipee\/[\w.-]+$/, p.id);
     assert.ok(p.repo.endsWith(`/${p.id}`), `${p.id}: id e URL divergem`);
   }
 });
 
-test('o projeto em destaque também aparece na lista de projetos', () => {
-  assert.ok(projects.some((p) => p.id === featuredProject.id));
+test('projetos em destaque: BH Traffic, ES Fuel e a esteira de CI, nesta ordem', () => {
+  assert.deepEqual(
+    projects.map((p) => p.id),
+    ['BH-traffic-intelligence', 'ES-fuel-intelligence', 'jenkins-ci-case-study'],
+  );
+  for (const p of projects) {
+    assert.ok(!p.implemented || (p.implemented > 0 && p.implemented < p.pipeline.length), `${p.id}: implemented`);
+  }
 });
 
-test('competências citando repositório referenciam projetos existentes', () => {
-  const projectIds = new Set(projects.map((p) => p.id));
+test('competências citando repositório referenciam repositórios conhecidos', () => {
+  // Repositórios públicos que continuam no perfil, mas saíram dos projetos em destaque.
+  const projectIds = new Set([...projects.map((p) => p.id), 'auto_vagas', 'acidentes_bh']);
   const repoLike = /^[a-z0-9]+_[a-z0-9_]+$/;
   for (const group of skillGroups) {
     for (const [name, source] of group.skills) {
@@ -75,17 +82,22 @@ test('todo o conteúdo profissional é exibido (nada foi perdido no redesign)', 
   assert.ok(has(profile.quote) && has(profile.headline));
 });
 
-test('projetos e estudo de caso aparecem integralmente', () => {
+test('projetos e estudos de caso aparecem integralmente', () => {
   for (const p of projects) {
     assert.ok(has(p.name) && has(p.summary) && body.includes(`href="${p.repo}"`), p.id);
-    for (const f of p.features ?? []) assert.ok(has(f), f);
+    for (const f of p.features) assert.ok(has(f), f);
     for (const t of p.tech) assert.ok(has(t), t);
+    for (const text of [p.problem, p.solution, p.note, p.kind, ...p.pipeline, ...p.stack, ...p.outcomes]) {
+      assert.ok(has(text), `${p.id}: ${text}`);
+    }
+    for (const [title, text] of p.implementation) assert.ok(has(title) && has(text), title);
+    assert.ok(ids.has(`caso-${p.id}`) && body.includes(`href="#caso-${p.id}"`), `${p.id}: card leva ao estudo de caso`);
+    const planned = p.pipeline.length - (p.implemented ?? p.pipeline.length);
+    const panel = body.slice(body.indexOf(`id="caso-${p.id}"`)).split('class="featured__panel')[0];
+    assert.equal((panel.match(/pipeline__step--planned/g) ?? []).length, planned, `${p.id}: etapas planejadas`);
   }
-  const f = featuredProject;
-  for (const text of [f.summary, f.problem, f.solution, f.note, f.kind, ...f.pipeline, ...f.tech, ...f.outcomes]) {
-    assert.ok(has(text), text);
-  }
-  for (const [title, text] of f.implementation) assert.ok(has(title) && has(text), title);
+  const section = body.slice(body.indexOf('id="projetos"'), body.indexOf('id="jornada"'));
+  assert.doesNotMatch(section, /auto_vagas|acidentes_bh|Acidentes de Trânsito/, 'projetos removidos do destaque');
   assert.ok(ids.has('destaque'), 'âncora #destaque preservada');
 });
 

@@ -4,7 +4,7 @@
 import { profile, site } from '../content/profile.js';
 import { experience } from '../content/experience.js';
 import { highlights, skillGroups } from '../content/skills.js';
-import { featuredProject, projects } from '../content/projects.js';
+import { projects } from '../content/projects.js';
 import { journey, statuses } from '../content/journey.js';
 import { awards, certifications, education } from '../content/education.js';
 import { html, toString } from './html.js';
@@ -25,7 +25,6 @@ const data = {
   experience,
   skillGroups,
   highlights,
-  featuredProject,
   projects,
   journey,
   statuses,
